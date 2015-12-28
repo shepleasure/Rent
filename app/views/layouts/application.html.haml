@@ -9,8 +9,19 @@
 	%nav.navbar.navbar-default
 		.container
 			.navbar-brand= link_to "Rent", root_path
+			- if user_signed_in?
+				%ul.nav.navbar-nav.navbar-right
+					%li= link_to 'Post an Item', new_post_path
+					%li= link_to 'Account', edit_user_registration_path
+					%li= link_to 'Sign out', destroy_user_session_path, method: :delete
+			- else
+				%ul.nav.navbar-nav.navbar-right
+					%li= link_to "Sign Up", new_user_registration_path
+					%li= link_to "Sign In", new_user_session_path
 
 	.container
 		- Category.order(:name).each do |category|
 			= link_to category.name, posts_path(category: category.name)
+		- flash.each do |name , msg|
+			= content_tag(:div, msg, class: "alert alert-#{name}")
 		= yield
